@@ -1,0 +1,54 @@
+import { useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+
+const links = [
+ "home","about","skills","projects","education","contact"
+];
+
+export default function Navbar(){
+
+ const [open,setOpen] = useState(false);
+
+ return(
+  <nav className="nav">
+
+   <h3 className="gradient logo">Portfolio</h3>
+
+   {/* Desktop Links */}
+   <div className="nav-links desktop">
+    {links.map(l=>(
+     <a key={l} href={`#${l}`}>
+      {l.toUpperCase()}
+      <span></span>
+     </a>
+    ))}
+   </div>
+
+   {/* Hamburger */}
+   <div className="hamburger" onClick={()=>setOpen(!open)}>
+    <span></span>
+    <span></span>
+    <span></span>
+   </div>
+
+   {/* Mobile Menu */}
+   <AnimatePresence>
+    {open && (
+     <motion.div
+      className="mobile-menu"
+      initial={{opacity:0,y:-20}}
+      animate={{opacity:1,y:0}}
+      exit={{opacity:0,y:-20}}
+     >
+      {links.map(l=>(
+       <a key={l} href={`#${l}`} onClick={()=>setOpen(false)}>
+        {l.toUpperCase()}
+       </a>
+      ))}
+     </motion.div>
+    )}
+   </AnimatePresence>
+
+  </nav>
+ )
+}
