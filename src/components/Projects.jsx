@@ -1,114 +1,86 @@
-import { motion } from "framer-motion";
-import { useRef } from "react";
-
-const projects = [
-  // {
-  //   title: "Education Website – Full Stack",
-  //   tech: ["React.js", "Django", "MySQL"],
-  //   github: "https://github.com/ashishparihar679/eduction",
-  //   demo: "https://your-live-demo.com", // optional
-  //   video:
-  //     "https://res.cloudinary.com/diqthlga3/video/upload/v1764539095/Screen_Recording_2025-01-19_180651_s74qfz.mp4",
-  //   desc: "Full-stack education platform with React frontend and Django REST backend.",
-  //   points: [
-  //     "React reusable components",
-  //     "Django REST APIs",
-  //     "MySQL database",
-  //     "CRUD operations",
-  //     "Responsive UI"
-  //   ]
-  // },
-
-  // {
-  //   title: "React CRUD Dashboard",
-  //   tech: ["React.js", "JavaScript"],
-  //   github: "https://github.com/ashishparihar679/react-crud-dashboard",
-  //   demo: "",
-  //   video:
-  //     "https://res.cloudinary.com/diqthlga3/video/upload/v1764539095/Screen_Recording_2025-01-19_180651_s74qfz.mp4",
-  //   desc: "Modern CRUD dashboard built using React functional components.",
-  //   points: [
-  //     "Create / Read / Update / Delete",
-  //     "Component-based UI",
-  //     "Responsive layout"
-  //   ]
-  // }
-];
-
-function ProjectCard({ p, index }) {
-  const videoRef = useRef(null);
-
-  const play = () => videoRef.current?.play();
-  const stop = () => {
-    if (videoRef.current) {
-      videoRef.current.pause();
-      videoRef.current.currentTime = 0;
-    }
-  };
-
-  const openProject = () => {
-    window.open(p.demo || p.github, "_blank");
-  };
-
-  return (
-    <motion.div
-      className="project-card glass-hover"
-      initial={{ opacity: 0, y: 40 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.15 }}
-      whileHover={{ y: -12 }}
-      onMouseEnter={play}
-      onMouseLeave={stop}
-      onClick={openProject}
-    >
-      {/* CLOUDINARY VIDEO */}
-      <div className="project-media">
-        <video
-          ref={videoRef}
-          src={p.video}
-          muted
-          loop
-          playsInline
-          preload="none"   /* lazy-load */
-        />
-        <div className="video-overlay">Open Project →</div>
-      </div>
-
-      <h3>{p.title}</h3>
-
-      <div className="tech-row">
-        {p.tech.map((t, i) => (
-          <span key={i}>{t}</span>
-        ))}
-      </div>
-
-      <p className="project-desc">{p.desc}</p>
-
-      <ul>
-        {p.points.map((pt, i) => (
-          <li key={i}>✔ {pt}</li>
-        ))}
-      </ul>
-    </motion.div>
-  );
-}
+import { useState } from "react";
 
 export default function Projects() {
-  return (
-    <section className="section" id="projects">
-      <motion.h1
-        className="gradient"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-      >
-        Projects
-      </motion.h1>
 
-      <div className="project-grid">
-        {projects.map((p, i) => (
-          <ProjectCard key={i} p={p} index={i} />
-        ))}
+  // 👉 Apne 2 image URLs yaha daalo
+  const baseImages = [
+    "https://res.cloudinary.com/duipuyys1/image/upload/v1776107410/D5_JUL24_PPM_egbfeh.png",
+  "https://res.cloudinary.com/duipuyys1/image/upload/v1776107410/D4_JUL24_JPT_nereek.png",
+  "https://res.cloudinary.com/duipuyys1/image/upload/v1776107409/D7_JUL24_PPM_usmyox.png",
+  "https://res.cloudinary.com/duipuyys1/image/upload/v1776107408/D7_JUL24_SER_szb9ql.png",
+  "https://res.cloudinary.com/duipuyys1/image/upload/v1776107406/D5_JUL24_YDS_oyxoeg.png",
+  "https://res.cloudinary.com/duipuyys1/image/upload/v1776107403/D5_JUL24_OHB_2_dkg1dl.png",
+  "https://res.cloudinary.com/duipuyys1/image/upload/v1776107403/D4_JUL24_YDS_znro8e.png",
+  "https://res.cloudinary.com/duipuyys1/image/upload/v1776107398/D4_AUG24_KBC_w9zqp5.png",
+  "https://res.cloudinary.com/duipuyys1/image/upload/v1776107396/D6_JUL24_SER_xntg4x.png",
+  "https://res.cloudinary.com/duipuyys1/image/upload/v1776107400/D5_JUL24_JPT_zectxx.png",
+  "https://res.cloudinary.com/duipuyys1/image/upload/v1776107401/D3_AUG24_SER_lun1hn.png",
+  "https://res.cloudinary.com/duipuyys1/image/upload/v1776107398/D4_AUG24_JPT_i3ycmt.png",
+  ];
+
+  // 👉 32 images banane ke liye repeat kar rahe hain
+  const images = Array.from({ length: 12 }, (_, i) => 
+    baseImages[i % baseImages.length]
+  );
+
+  const [page, setPage] = useState(0);
+  const [activeImage, setActiveImage] = useState(images[0]);
+
+  const imagesPerPage = 16;
+
+  // 👉 current 16 images
+  const currentImages = images.slice(
+    page * imagesPerPage,
+    (page + 1) * imagesPerPage
+  );
+
+  return (
+    <section className="section">
+
+      <h1 className="head">
+        Work <span className="outline-text">Project</span>
+      </h1>
+
+      <div className="container">
+
+        {/* 👈 Left Preview */}
+        <div className="left">
+          <img src={activeImage} alt="preview" />
+        </div>
+
+        {/* 👉 Right Grid */}
+        <div className="right">
+          {currentImages.map((img, index) => (
+            <img
+              key={index}
+              src={img}
+              alt="grid"
+              onMouseEnter={() => setActiveImage(img)}
+            />
+          ))}
+
+          {/* 👇 Buttons */}
+          <div className="controls">
+            <button
+              onClick={() => setPage(page - 1)}
+              disabled={page === 0}
+            >
+              ⬅ Prev
+            </button>
+
+            <button
+              onClick={() =>
+                setPage((page + 1) % Math.ceil(images.length / imagesPerPage))
+              }
+            >
+              Next ➡
+            </button>
+          </div>
+
+        </div>
+
       </div>
+
     </section>
   );
 }
